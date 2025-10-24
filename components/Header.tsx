@@ -6,13 +6,12 @@ import { LogOut, BookOpenCheck, LayoutDashboard } from 'lucide-react';
 
 interface HeaderProps {
   user: User;
-  onShowGuide: () => void;
   isAdmin: boolean;
   currentView: 'student' | 'admin';
   onToggleView: () => void;
 }
 
-const Header: React.FC<HeaderProps> = ({ user, onShowGuide, isAdmin, currentView, onToggleView }) => {
+const Header: React.FC<HeaderProps> = ({ user, isAdmin, currentView, onToggleView }) => {
   const handleLogout = async () => {
     try {
       const { error } = await supabase.auth.signOut();
@@ -33,12 +32,6 @@ const Header: React.FC<HeaderProps> = ({ user, onShowGuide, isAdmin, currentView
             </h1>
           </div>
           <div className="flex items-center gap-4">
-             <button
-              onClick={onShowGuide}
-              className="px-3 py-1 text-sm font-medium text-slate-600 rounded-md dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-700"
-            >
-              Supabase Guide
-            </button>
             {isAdmin && (
                <button
                   onClick={onToggleView}

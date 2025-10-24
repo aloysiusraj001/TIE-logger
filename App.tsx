@@ -7,7 +7,6 @@ import DailyLogForm from './components/DailyLogForm';
 import LogHistory from './components/LogHistory';
 import AdminDashboard from './components/AdminDashboard';
 import ConfigurationErrorScreen from './components/ConfigurationErrorScreen';
-import SupabaseIntegrationGuide from './components/SupabaseIntegrationGuide';
 import { LoaderCircle } from 'lucide-react';
 
 // Hardcoded list of admin emails for demo purposes.
@@ -25,7 +24,6 @@ const App: React.FC = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [logs, setLogs] = useState<LogEntry[]>([]);
-  const [showGuide, setShowGuide] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [currentView, setCurrentView] = useState<'student' | 'admin'>('student');
 
@@ -119,10 +117,7 @@ const App: React.FC = () => {
 
   if (!isConfigured) {
     return (
-        <>
-            <ConfigurationErrorScreen onShowGuide={() => setShowGuide(true)} />
-            {showGuide && <SupabaseIntegrationGuide onClose={() => setShowGuide(false)} />}
-        </>
+        <ConfigurationErrorScreen />
     );
   }
 
@@ -142,7 +137,6 @@ const App: React.FC = () => {
         <>
           <Header 
             user={user} 
-            onShowGuide={() => setShowGuide(true)} 
             isAdmin={isAdmin}
             currentView={currentView}
             onToggleView={handleToggleView}
@@ -159,7 +153,6 @@ const App: React.FC = () => {
           </main>
         </>
       )}
-      {showGuide && <SupabaseIntegrationGuide onClose={() => setShowGuide(false)} />}
     </div>
   );
 };
