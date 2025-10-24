@@ -31,13 +31,13 @@ const LogHistory: React.FC<LogHistoryProps> = ({ logs }) => {
              </div>
           </div>
           <div>
-            <h4 className="font-semibold text-slate-700 dark:text-slate-200">Plan:</h4>
-            <p className="text-sm text-slate-600 whitespace-pre-wrap dark:text-slate-300">{log.plan}</p>
+            <h4 className="font-semibold text-slate-700 dark:text-slate-200">Today's Achievement:</h4>
+            <p className="text-sm text-slate-600 whitespace-pre-wrap dark:text-slate-300">{log.achievement}</p>
           </div>
-          {log.achievement && (
+          {log.plan && (
             <div className="mt-2">
-              <h4 className="font-semibold text-slate-700 dark:text-slate-200">Achievement:</h4>
-              <p className="text-sm text-slate-600 whitespace-pre-wrap dark:text-slate-300">{log.achievement}</p>
+              <h4 className="font-semibold text-slate-700 dark:text-slate-200">Plan for Tomorrow:</h4>
+              <p className="text-sm text-slate-600 whitespace-pre-wrap dark:text-slate-300">{log.plan}</p>
             </div>
           )}
         </div>

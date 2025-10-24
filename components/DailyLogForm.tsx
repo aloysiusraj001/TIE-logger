@@ -16,8 +16,8 @@ const DailyLogForm: React.FC<DailyLogFormProps> = ({ user }) => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!plan.trim()) {
-      setError("The plan cannot be empty.");
+    if (!achievement.trim() || !plan.trim()) {
+      setError("Please fill out both what you did today and your plan for tomorrow.");
       return;
     }
     setIsSubmitting(true);
@@ -27,9 +27,8 @@ const DailyLogForm: React.FC<DailyLogFormProps> = ({ user }) => {
       const newLog = {
         userId: user.id,
         userEmail: user.email, // Include user's email for admin dashboard
-        plan: plan,
-        achievement: achievement,
-        // created_at is handled by the database default value
+        plan: plan, // Corresponds to "What is your plan for tomorrow?"
+        achievement: achievement, // Corresponds to "What did you do today?"
       };
 
       const { error } = await supabase.from('logs').insert([newLog]);
@@ -51,30 +50,31 @@ const DailyLogForm: React.FC<DailyLogFormProps> = ({ user }) => {
       <h2 className="mb-4 text-xl font-bold text-slate-800 dark:text-slate-100">Today's Log</h2>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label htmlFor="plan" className="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
-            What's your plan for today?
-          </label>
-          <textarea
-            id="plan"
-            rows={4}
-            className="block w-full p-2.5 text-sm text-slate-900 bg-slate-50 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white"
-            placeholder="e.g., 3D print version 4 of the base, test PCB integrations, update firmware..."
-            value={plan}
-            onChange={(e) => setPlan(e.target.value)}
-            required
-          ></textarea>
-        </div>
-        <div>
           <label htmlFor="achievement" className="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
-            What did you achieve? (Optional)
+            What did you do today?
           </label>
           <textarea
             id="achievement"
-            rows={3}
+            rows={4}
             className="block w-full p-2.5 text-sm text-slate-900 bg-slate-50 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white"
             placeholder="e.g., Completed successful PCB integration test, fixed firmware bug."
             value={achievement}
             onChange={(e) => setAchievement(e.target.value)}
+            required
+          ></textarea>
+        </div>
+        <div>
+          <label htmlFor="plan" className="block mb-2 text-sm font-medium text-slate-700 dark:text-slate-300">
+            What's your plan for tomorrow?
+          </label>
+          <textarea
+            id="plan"
+            rows={3}
+            className="block w-full p-2.5 text-sm text-slate-900 bg-slate-50 rounded-lg border border-slate-300 focus:ring-brand-500 focus:border-brand-500 dark:bg-slate-700 dark:border-slate-600 dark:placeholder-slate-400 dark:text-white"
+            placeholder="e.g., Start 3D printing version 5 of the base, research new microcontrollers..."
+            value={plan}
+            onChange={(e) => setPlan(e.target.value)}
+            required
           ></textarea>
         </div>
         {error && <p className="text-sm text-red-500">{error}</p>}

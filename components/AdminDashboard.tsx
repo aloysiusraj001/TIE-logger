@@ -92,8 +92,8 @@ const AdminDashboard: React.FC = () => {
                                 <tr>
                                     <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Team Member</th>
                                     <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Date</th>
-                                    <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Plan</th>
-                                    <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Achievement</th>
+                                    <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Today's Achievement</th>
+                                    <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Plan for Tomorrow</th>
                                 </tr>
                             </thead>
                             <tbody className="bg-white divide-y divide-slate-200 dark:bg-slate-800 dark:divide-slate-700">
@@ -101,8 +101,8 @@ const AdminDashboard: React.FC = () => {
                                     <tr key={log.id}>
                                         <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">{log.userEmail}</td>
                                         <td className="px-4 py-3 text-slate-500 dark:text-slate-400 whitespace-nowrap">{log.date}</td>
-                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-300"><p className="w-64 truncate">{log.plan}</p></td>
                                         <td className="px-4 py-3 text-slate-600 dark:text-slate-300"><p className="w-64 truncate">{log.achievement || '–'}</p></td>
+                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-300"><p className="w-64 truncate">{log.plan || '–'}</p></td>
                                     </tr>
                                 ))}
                             </tbody>
