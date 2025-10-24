@@ -1,0 +1,5 @@
+{
+  "name": "TIE Daily activity logger",
+  "description": "A simple and effective logging system for students to post their daily work plans. This application is designed to be integrated with Firebase for data storage and user authentication, helping managers or teachers track student engagement.",
+  "requestFramePermissions": []
+}
