@@ -71,7 +71,7 @@ const AdminDashboard: React.FC = () => {
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md dark:bg-slate-800">
-            <h2 className="mb-4 text-2xl font-bold text-slate-800 dark:text-slate-100">Admin Dashboard: All Student Logs</h2>
+            <h2 className="mb-4 text-2xl font-bold text-slate-800 dark:text-slate-100">Admin Dashboard: All Team Logs</h2>
             
             {isLoading ? (
                  <div className="flex items-center justify-center h-64">
@@ -81,7 +81,7 @@ const AdminDashboard: React.FC = () => {
                 <div className="p-6 text-center">
                     <h3 className="text-lg font-medium text-slate-700 dark:text-slate-200">No logs found.</h3>
                     <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                        When students start submitting logs, they will appear here.
+                        When team members start submitting logs, they will appear here.
                     </p>
                 </div>
             ) : (
@@ -90,7 +90,7 @@ const AdminDashboard: React.FC = () => {
                         <table className="min-w-full text-sm text-left divide-y divide-slate-200 dark:divide-slate-700">
                             <thead className="bg-slate-50 dark:bg-slate-700/50">
                                 <tr>
-                                    <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Student</th>
+                                    <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Team Member</th>
                                     <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Date</th>
                                     <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Plan</th>
                                     <th scope="col" className="px-4 py-3 font-medium text-slate-600 dark:text-slate-300">Achievement</th>

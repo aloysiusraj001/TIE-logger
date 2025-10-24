@@ -28,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ user, isAdmin, currentView, onToggleVie
           <div className="flex items-center gap-3">
             <BookOpenCheck className="w-8 h-8 text-brand-500" />
             <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">
-              Student Daily Planner
+              TIE Daily Activity Planner
             </h1>
           </div>
           <div className="flex items-center gap-4">
