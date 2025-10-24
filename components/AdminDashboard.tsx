@@ -10,22 +10,55 @@ const AdminDashboard: React.FC = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
+    const [expandedLogRowId, setExpandedLogRowId] = useState<number | null>(null);
+    const [users, setUsers] = useState<{ userEmail: string; userId: string }[]>([]);
+    const [selectedUserId, setSelectedUserId] = useState<string>('all');
 
-    const fetchLogs = async (currentPage: number) => {
+    useEffect(() => {
+        const fetchUsers = async () => {
+            try {
+                const { data, error } = await supabase
+                    .from('logs')
+                    .select('userEmail, userId');
+
+                if (error) throw error;
+                
+                if (data) {
+                    const uniqueUsers = Array.from(new Map(data
+                        .filter(log => log.userEmail && log.userId)
+                        .map(log => [log.userId, { userEmail: log.userEmail, userId: log.userId }]))
+                        .values()
+                    );
+                    uniqueUsers.sort((a, b) => a.userEmail.localeCompare(b.userEmail));
+                    setUsers(uniqueUsers);
+                }
+            } catch (error) {
+                console.error("Error fetching users:", error);
+            }
+        };
+
+        fetchUsers();
+    }, []);
+
+    const fetchLogs = async (currentPage: number, filterUserId: string) => {
         setIsLoading(true);
         try {
             const from = (currentPage - 1) * LOGS_PER_PAGE;
             const to = from + LOGS_PER_PAGE - 1;
 
-            const { data, error, count } = await supabase
+            let query = supabase
                 .from('logs')
                 .select('*', { count: 'exact' })
                 .order('created_at', { ascending: false })
                 .range(from, to);
+            
+            if (filterUserId !== 'all') {
+                query = query.eq('userId', filterUserId);
+            }
+
+            const { data, error, count } = await query;
 
             if (error) {
-                // This might fail if RLS is not set up correctly for admins.
-                // The guide explains how to set this up.
                 console.error("Error fetching logs for admin:", error);
                 throw error;
             }
@@ -44,6 +77,8 @@ const AdminDashboard: React.FC = () => {
             
             if (count) {
                 setTotalPages(Math.ceil(count / LOGS_PER_PAGE));
+            } else {
+                setTotalPages(0);
             }
 
         } catch (error) {
@@ -54,24 +89,56 @@ const AdminDashboard: React.FC = () => {
     };
     
     useEffect(() => {
-        fetchLogs(page);
-    }, [page]);
+        fetchLogs(page, selectedUserId);
+    }, [page, selectedUserId]);
+
+    const handleFilterChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        setPage(1);
+        setSelectedUserId(e.target.value);
+        setExpandedLogRowId(null);
+    };
+
+    const handleRowClick = (logId: number) => {
+        setExpandedLogRowId(currentId => (currentId === logId ? null : logId));
+    };
     
     const handleNextPage = () => {
         if (page < totalPages) {
             setPage(prev => prev + 1);
+            setExpandedLogRowId(null);
         }
     };
 
     const handlePrevPage = () => {
         if (page > 1) {
             setPage(prev => prev - 1);
+            setExpandedLogRowId(null);
         }
     };
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md dark:bg-slate-800">
-            <h2 className="mb-4 text-2xl font-bold text-slate-800 dark:text-slate-100">Admin Dashboard: All Team Logs</h2>
+            <div className="flex flex-col items-start justify-between gap-4 mb-4 sm:flex-row sm:items-center">
+                <h2 className="text-2xl font-bold text-slate-800 dark:text-slate-100">Admin Dashboard: All Team Logs</h2>
+                
+                <div className="w-full sm:w-auto">
+                    <label htmlFor="user-filter" className="sr-only">Filter by Team Member</label>
+                    <select
+                        id="user-filter"
+                        value={selectedUserId}
+                        onChange={handleFilterChange}
+                        className="w-full px-3 py-2 text-sm bg-white border rounded-md shadow-sm sm:w-64 border-slate-300 dark:bg-slate-700 dark:border-slate-600 dark:text-slate-200 focus:outline-none focus:ring-brand-500 focus:border-brand-500"
+                        aria-label="Filter by Team Member"
+                    >
+                        <option value="all">All Team Members</option>
+                        {users.map(user => (
+                            <option key={user.userId} value={user.userId}>
+                                {user.userEmail}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            </div>
             
             {isLoading ? (
                  <div className="flex items-center justify-center h-64">
@@ -81,7 +148,7 @@ const AdminDashboard: React.FC = () => {
                 <div className="p-6 text-center">
                     <h3 className="text-lg font-medium text-slate-700 dark:text-slate-200">No logs found.</h3>
                     <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
-                        When team members start submitting logs, they will appear here.
+                        When team members start submitting logs, they will appear here. If you've applied a filter, try selecting "All Team Members".
                     </p>
                 </div>
             ) : (
@@ -98,11 +165,19 @@ const AdminDashboard: React.FC = () => {
                             </thead>
                             <tbody className="bg-white divide-y divide-slate-200 dark:bg-slate-800 dark:divide-slate-700">
                                 {logs.map(log => (
-                                    <tr key={log.id}>
+                                    <tr 
+                                        key={log.id} 
+                                        onClick={() => handleRowClick(log.id)} 
+                                        className="transition-colors duration-150 cursor-pointer hover:bg-slate-50 dark:hover:bg-slate-700/50"
+                                    >
                                         <td className="px-4 py-3 text-slate-700 dark:text-slate-300 whitespace-nowrap">{log.userEmail}</td>
                                         <td className="px-4 py-3 text-slate-500 dark:text-slate-400 whitespace-nowrap">{log.date}</td>
-                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-300"><p className="w-64 truncate">{log.achievement || '–'}</p></td>
-                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-300"><p className="w-64 truncate">{log.plan || '–'}</p></td>
+                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
+                                            <p className={expandedLogRowId === log.id ? "whitespace-normal break-words" : "w-64 truncate"}>{log.achievement || '–'}</p>
+                                        </td>
+                                        <td className="px-4 py-3 text-slate-600 dark:text-slate-300">
+                                            <p className={expandedLogRowId === log.id ? "whitespace-normal break-words" : "w-64 truncate"}>{log.plan || '–'}</p>
+                                        </td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -122,7 +197,7 @@ const AdminDashboard: React.FC = () => {
                         </span>
                         <button 
                             onClick={handleNextPage}
-                            disabled={page === totalPages}
+                            disabled={page === totalPages || totalPages === 0}
                             className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium rounded-md text-slate-600 bg-white dark:text-slate-300 dark:bg-slate-700 hover:bg-slate-50 dark:hover:bg-slate-600 disabled:opacity-50 disabled:cursor-not-allowed ring-1 ring-slate-200 dark:ring-slate-600"
                         >
                             Next

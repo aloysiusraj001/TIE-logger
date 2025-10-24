@@ -22,4 +22,9 @@ export const allowedEmails = new Set([
   'awuap@connect.ust.hk',
   'zwudj@connect.ust.hk',
   'szhubd@connect.ust.hk',
+   'winnie@tie.ust',
+    'jac@tie.ust',
+    'sean@tie.ust',
+    'aloysius@tie.ust',
+    'admin@tie.ust',
 ]);
