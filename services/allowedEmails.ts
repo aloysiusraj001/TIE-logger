@@ -1,0 +1,25 @@
+// List of emails authorized to register for an account.
+// For enhanced security, consider disabling sign-ups in your Supabase project settings
+// and inviting users manually, or using a server-side function to validate registrations.
+export const allowedEmails = new Set([
+  'ccaiae@connect.ust.hk',
+  'tchangac@connect.ust.hk',
+  'jchenic@connect.ust.hk',
+  'kchenca@connect.ust.hk',
+  'zfanay@connect.ust.hk',
+  'cgongaa@connect.ust.hk',
+  'kyhong@connect.ust.hk',
+  'lhuaab@connect.ust.hk',
+  'ykean@connect.ust.hk',
+  'hlinca@connect.ust.hk',
+  'cliuev@connect.ust.hk',
+  'zmuac@connect.ust.hk',
+  'jpanbd@connect.ust.hk',
+  'hshengad@connect.ust.hk',
+  'tsinghaa@connect.ust.hk',
+  'ywangtc@connect.ust.hk',
+  'zwangnv@connect.ust.hk',
+  'awuap@connect.ust.hk',
+  'zwudj@connect.ust.hk',
+  'szhubd@connect.ust.hk',
+]);

@@ -1,6 +1,7 @@
 // Implemented the LoginScreen component with Supabase auth for login and sign-up.
 import React, { useState } from 'react';
 import { supabase } from '../services/supabase';
+import { allowedEmails } from '../services/allowedEmails';
 
 const LoginScreen: React.FC = () => {
   const [email, setEmail] = useState('');
@@ -25,6 +26,10 @@ const LoginScreen: React.FC = () => {
       if (isLoginView) {
         authResponse = await supabase.auth.signInWithPassword({ email, password });
       } else {
+        // Check if the email is in the allowed list before attempting to sign up
+        if (!allowedEmails.has(email.toLowerCase())) {
+          throw new Error("This email address is not authorized to register.");
+        }
         authResponse = await supabase.auth.signUp({ email, password });
         if (!authResponse.error) {
             setMessage("Sign up successful! Please check your email to confirm your account.");
